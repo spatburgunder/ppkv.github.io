@@ -1,16 +1,20 @@
 (function () {
-  "use strict";
+    "use strict";
 
-  function startPlugin() {
-    window.plugin = true;
-    
-
-  Lampa.Listener.follow("app", (e) => {
-    if (e.type == "ready") {
-    $("[class=showy-pro-entry-banner]").eq(0).remove(); 
-    }
-  });
- }
-  if (!window.plugin) startPlugin();
+    if (window.block_showy_banner_ready) return;
+    window.block_showy_banner_ready = true;
+  
+    // Заглушка должна появиться ДО того, как выполнится online.js
+    window.ShowyProEntryBanner = {
+        attach: function () {
+            // возвращаем "пустой" контроллер на случай,
+            // если код online.js всё же попытается вызвать .mount()/.destroy()
+            return {
+                mount: function () {},
+                destroy: function () {},
+                ensure: function () {}
+            };
+        },
+        version: 'blocked'
+    };
 })();
-
